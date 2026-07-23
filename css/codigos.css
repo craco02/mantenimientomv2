@@ -1,0 +1,38 @@
+/* Encapsulado con prefijo codigos- */
+#codigos-title {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+#codigos-search {
+  display: flex;
+  width: 80%;
+  padding: 10px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#codigos-table {
+  width: 75%;
+  margin: 15px auto;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+#codigos-table th, 
+#codigos-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+#codigos-table th {
+  background: #007acc;
+  color: white;
+}
+
+#codigos-table tr:nth-child(even) {
+  background: #f2f2f2;
+}

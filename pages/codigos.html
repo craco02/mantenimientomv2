@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mantenimiento Metalúrgica Vera SRL</title>
+        <link rel="icon" href="../img/Logo.png" type="image/png" sizes="32x32">
+        <link rel="stylesheet" href="../css/estilos.css">
+        <link rel="stylesheet" href="../css/codigos.css">
+    </head>
+    <body>
+        <header >
+            <nav class="nav-bar">
+                 <ul class="list-bar">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../index.html#solicitudes">Solicitudes</a></li>
+                    <li><a href="../index.html#informaciones">Informaciones</a></li>
+                    <li><a href="../index.html#form-adds">Formularios</a></li>
+                    <li><a href="../index.html#otros">Otros</a></li>
+                    <li><a href="../index.html#contacto">Contacto</a></li>
+                 </ul>
+            </nav>
+            <div class="banner">
+            <div class="logo"><img height="150" width="150" src="../img/Logo.png" alt="logo metalurgica vera"></div>
+            <div class="hero">
+                <h1>Mantenimiento Metalúrgica Vera S.R.L.</h1>
+                <p>Garantizamos la confiabilidad, disponibilidad y eficiencia de los equipos e instalaciones industriales.</p>
+            </div>
+            </div>  
+        </header>
+
+        <h2 id="codigos-title">Código de Máquinas</h2>
+        <input type="text" id="codigos-search" placeholder="Buscar...">
+        
+        <table id="codigos-table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody id="codigos-body">
+            <!-- Filas dinámicas -->
+          </tbody>
+        </table>
+
+        <script src="../js/codigos.js"></script>
+  </body>
+</html>
