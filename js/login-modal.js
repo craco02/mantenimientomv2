@@ -29,7 +29,7 @@ closeModal.addEventListener('click', () => { loginModal.style.display = 'none'; 
 form.addEventListener('submit', async event => {
   event.preventDefault();
   try {
-    const res = await fetch('http://192.168.0.200:3000/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: document.getElementById('user').value, password: document.getElementById('password').value }) });
+    const res = await fetch('http://192.168.23.210:3000/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: document.getElementById('user').value, password: document.getElementById('password').value }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'No se pudo iniciar sesi\u00f3n');
     localStorage.setItem('token', data.token); localStorage.setItem('role', data.role); localStorage.setItem('username', document.getElementById('user').value);
