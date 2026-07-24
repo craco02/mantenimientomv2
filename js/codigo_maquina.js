@@ -67,7 +67,7 @@
     }
 
     try {
-      const res = await fetch(`http://192.168.0.200:3000/api/productos?search=${encodeURIComponent(busqueda)}`);
+      const res = await fetch(`http://192.168.23.210:3000/api/productos?search=${encodeURIComponent(busqueda)}`);
       const datos = await res.json();
 
       resultadosActuales = datos.slice(0, 60);

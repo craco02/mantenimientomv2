@@ -5,7 +5,7 @@ const form = document.getElementById('loginForm');
 const mensaje = document.getElementById('loginMensaje');
 const fetchOriginal = window.fetch.bind(window);
 window.fetch = (url, options = {}) => {
-  if (String(url).startsWith('http://192.168.0.200:3000/api/')) {
+  if (String(url).startsWith('http://192.168.23.210:3000/api/')) {
     const token = localStorage.getItem('token');
     options.headers = { ...(options.headers || {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) };
   }
