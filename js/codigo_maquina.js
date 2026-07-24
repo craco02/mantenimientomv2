@@ -67,7 +67,11 @@
     }
 
     try {
+<<<<<<< HEAD
       const res = await fetch(`https://192.168.23.210:3000/api/productos?search=${encodeURIComponent(busqueda)}`);
+=======
+      const res = await fetch(`/api/productos?search=${encodeURIComponent(busqueda)}`);
+>>>>>>> f9398da46d28c8bd43d647bb07fa40e3bfecc924
       const datos = await res.json();
 
       resultadosActuales = datos.slice(0, 60);
@@ -175,7 +179,11 @@ crearSelectConBusqueda(selectMaquina);
     const payload = { codigo: machine.dataset.codigo || machine.value, maquina_equipo: machine.dataset.descripcion, nombre_declarado: declarado.value, averia: averia.value, solicitado: solicitante.value, sector: sectorNames[Number(sector.value)], categoria: categoryNames[Number(categoria.value)] };
     if (!payload.codigo || !payload.maquina_equipo) return alert('Seleccione una maquina desde la lista de resultados.');
     try {
+<<<<<<< HEAD
       const response = await fetch(`https://192.168.23.210:3000/api/ordenes${id ? `/${id}/solicitud` : ''}`,   { method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` }, body: JSON.stringify(payload) });
+=======
+      const response = await fetch(`/api/ordenes${id ? `/${id}/solicitud` : ''}`, { method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` }, body: JSON.stringify(payload) });
+>>>>>>> f9398da46d28c8bd43d647bb07fa40e3bfecc924
       const data = await response.json(); if (!response.ok) throw new Error(data.detalle ? `${data.error}: ${data.detalle}` : data.error); alert(data.message || 'Guardado correctamente.');
       form.reset();
       if (window.location.pathname.includes('lista_solicitudes.html')) {

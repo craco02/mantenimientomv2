@@ -6,7 +6,11 @@ let ordenInicialDesc = true;
 // Cargar datos desde backend (solo ordenes)
 async function cargarOrdenes() {
   try {
+<<<<<<< HEAD
     const res = await fetch("https://192.168.23.210:3000/api/ordenes");
+=======
+    const res = await fetch("/api/ordenes");
+>>>>>>> f9398da46d28c8bd43d647bb07fa40e3bfecc924
     let data = await res.json();
 
     // Ordenar por id descendente y limitar a 1500
