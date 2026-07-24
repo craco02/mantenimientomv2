@@ -35,20 +35,10 @@ h2 {
 }
 
 #tablaOrdenes {
-  min-width: 1200px;
+  min-width: 2000px;        /* obliga a desbordar horizontalmente */
   border-collapse: collapse;
   width: 100%;
   font-size: 14px;
-  table-layout: fixed;
-}
-
-.table-scroll {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border: 1px solid rgba(0,0,0,0.12);
-  border-radius: 8px;
-  background: #fff;
 }
 
 thead th {
@@ -101,26 +91,4 @@ tr:hover {
   white-space: normal;       /* permite saltos de línea */
   word-wrap: break-word;     /* corta palabras largas */
   overflow-wrap: break-word; /* asegura que se acomode */
-}
-
-@media (max-width: 1200px) {
-  #tablaOrdenes {
-    min-width: 1000px;
-    font-size: 13px;
-  }
-  #tablaOrdenes th, #tablaOrdenes td {
-    padding: 6px 8px;
-    max-width: 140px;
-  }
-}
-
-@media (max-width: 900px) {
-  #tablaOrdenes {
-    min-width: 900px;
-    font-size: 12px;
-  }
-  #tablaOrdenes th, #tablaOrdenes td {
-    padding: 5px 6px;
-    max-width: 120px;
-  }
 }

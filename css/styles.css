@@ -262,19 +262,18 @@ header {
 }
 .principal {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
-    margin: 20px auto;
-    padding: 20px;
-    width: min(100%, 1140px);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin:20px auto;
+    padding: 20px auto;
+    width: 80%;
     justify-content: center;
-    box-sizing: border-box;
+   /* background-color: red;*/
 }
 .card img {
-    width: 100%;
-    max-width: 240px;
-    height: auto;
-    object-fit: contain;
+    width: 200px;
+    height: 120px;
+    max-width: 100%;
 }
 .inicio h2 {
     display: flex;
@@ -286,16 +285,15 @@ header {
     padding-top: 30px;
 }
 .card {
-    width: 100%;
-    max-width: 260px;
-    min-height: 170px;
-    padding: 18px;
-    margin: 0 auto 40px;
+    width: 200px;
+    height: 150px;
+    padding: 20px;
+    margin: 0;
     border: 2px solid #070707;
     border-radius: 10px;
     background-color: lightgreen;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    box-sizing: border-box;
+    margin-bottom: 60px;
 }
 .card:hover {
     background-color: darkgreen;
@@ -343,15 +341,13 @@ hr {
 .item-formularios {
     background-color: rgb(30, 41, 59, 0.3);
     border-radius: 12px;
-    padding: 18px;
-    width: min(220px, 100%);
-    height: auto;
-    min-height: 200px;
+    padding: 20px;
+    width: 160px;
+    height: 200px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.25);
     transition: all 0.3s ease;
     cursor: pointer;
-    box-sizing: border-box;
 }
 
 .item-formularios:hover {
@@ -374,7 +370,7 @@ hr {
 
 /* 🖼️ Íconos */
 span {
-    font-size: clamp(2.2rem, 3.5vw, 3em);
+    font-size: 3em;
     display: block;
     color: #f8fafc;
     transition: color 0.3s ease;
@@ -519,45 +515,6 @@ font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     .option-list li {
         margin: 10px auto;
         text-align: center;
-    }
-}
-
-/* Mejoras adicionales para pantallas de ancho medio/baja resolución */
-@media (max-width: 1200px) {
-    .nav-bar {
-        padding: 0 10px;
-    }
-    .list-bar {
-        gap: 8px 12px;
-    }
-    .banner {
-        padding: 10px 12px;
-    }
-    .hero h1 {
-        font-size: clamp(24px, 4vw, 32px);
-    }
-    .principal {
-        width: min(100%, 1000px);
-        gap: 16px;
-    }
-    .card {
-        max-width: 240px;
-    }
-    .item-formularios {
-        max-width: 220px;
-    }
-}
-
-@media (max-width: 1024px) {
-    .card {
-        padding: 16px;
-    }
-    .item-formularios {
-        width: 100%;
-        max-width: 100%;
-    }
-    .item-formularios p {
-        font-size: clamp(1rem, 2vw, 1.3rem);
     }
 }
 
