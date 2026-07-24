@@ -36,7 +36,7 @@ function crearSelectConBusqueda(selectId) {
 
   async function cargarOrdenes() {
     try {
-      const res = await fetch("http://192.168.23.210:3000/api/ordenes");
+      const res = await fetch("/api/ordenes");
       let data = await res.json();
 
       // Excluir los progresos que no deben mostrarse y ordenar descendente por id
