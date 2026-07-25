@@ -46,11 +46,17 @@
     const data = payload();
     if ((form.action.endsWith('/ordenes') && (!data.codigo || !data.maquina_equipo)) || (!form.action.endsWith('/ordenes') && !data.id)) return alert('Seleccione primero una opcion de la lista.');
     try {
-      const response = await fetch(form.action, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token()}` }, body: JSON.stringify(data) });
-      const result = await response.json();
+      const response = await API_FETCH(form.action, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token()}` }, body: JSON.stringify(data) });
+      let result;
+      try {
+        result = await response.json();
+      } catch (parseError) {
+        const text = await response.text();
+        throw new Error(text || 'No se pudo interpretar la respuesta del servidor.');
+      }
       if (!response.ok) throw new Error(result.detalle || result.error || 'No se pudo guardar');
       alert(result.message || 'Operacion completada.');
-      if (form.action.endsWith('/ordenes') || form.action.endsWith('/cierre') || form.action.endsWith('/asignacion')) {
+      if (form.action.endsWith('/ordenes') || form.action.endsWith('/cierre') || form.action.endsWith('/asignacion') || form.action.endsWith('/solicitud')) {
         form.reset();
         window.location.href = 'lista_solicitudes.html';
       }

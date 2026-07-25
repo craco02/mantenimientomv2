@@ -6,7 +6,7 @@ let ordenInicialDesc = true;
 // Cargar datos desde backend (solo ordenes)
 async function cargarOrdenes() {
   try {
-    const res = await fetch("http://192.168.23.210:3000/api/ordenes");
+    const res = await API_FETCH('/api/ordenes');
     let data = await res.json();
 
     // Ordenar por id descendente y limitar a 1500
@@ -22,6 +22,19 @@ async function cargarOrdenes() {
   } catch (err) {
     console.error("Error cargando ordenes:", err);
   }
+}
+
+function formatFecha(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  const pad = n => String(n).padStart(2, '0');
+  const dia = pad(date.getDate());
+  const mes = pad(date.getMonth() + 1);
+  const año = date.getFullYear();
+  const hora = pad(date.getHours());
+  const minutos = pad(date.getMinutes());
+  return `${dia}/${mes}/${año} ${hora}:${minutos}`;
 }
 
 // Renderizar tabla
@@ -41,9 +54,9 @@ function renderTabla(data) {
       <td>${row.solicitado || ""}</td>
       <td>${row.sector || ""}</td>
       <td>${row.registrado || ""}</td>
-      <td>${row.fecha_inicio || ""}</td>
-      <td>${row.fecha_vencimiento || ""}</td>
-      <td>${row.fecha_final || ""}</td>
+      <td>${formatFecha(row.fecha_inicio)}</td>
+      <td>${formatFecha(row.fecha_vencimiento)}</td>
+      <td>${formatFecha(row.fecha_final)}</td>
       <td>${row.reparacion || ""}</td>
       <td>${row.responsable || ""}</td>
       <td>${row.apoyo || ""}</td>

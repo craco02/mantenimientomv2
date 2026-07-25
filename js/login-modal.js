@@ -5,11 +5,13 @@ const form = document.getElementById('loginForm');
 const mensaje = document.getElementById('loginMensaje');
 const fetchOriginal = window.fetch.bind(window);
 window.fetch = (url, options = {}) => {
-  if (String(url).startsWith('/api/') || String(url).startsWith('http://192.168.23.210:3000/api/') || String(url).startsWith('https://192.168.23.210:3000/api/')) {
+  const normalizedUrl = typeof url === 'string' ? API_URL(url) : url;
+  const urlString = typeof normalizedUrl === 'string' ? normalizedUrl : String(normalizedUrl.url || '');
+  if (urlString.includes('/api/')) {
     const token = localStorage.getItem('token');
     options.headers = { ...(options.headers || {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) };
   }
-  return fetchOriginal(url, options);
+  return fetchOriginal(normalizedUrl, options);
 };
 function renderNav() {
   const token = localStorage.getItem('token');
@@ -29,7 +31,7 @@ closeModal.addEventListener('click', () => { loginModal.style.display = 'none'; 
 form.addEventListener('submit', async event => {
   event.preventDefault();
   try {
-    const res = await fetch('http://192.168.23.210:3000/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: document.getElementById('user').value, password: document.getElementById('password').value }) });
+    const res = await API_FETCH('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: document.getElementById('user').value, password: document.getElementById('password').value }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'No se pudo iniciar sesi\u00f3n');
     localStorage.setItem('token', data.token); localStorage.setItem('role', data.role); localStorage.setItem('username', document.getElementById('user').value);
