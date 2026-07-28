@@ -1172,6 +1172,92 @@ padding: 0 0 20px 0;
   color: #333;
 }
 
+/* Estilos para la tabla de costos */
+.tabla-costos {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-costos thead {
+  background-color: #0a6b0a;
+  color: white;
+}
+
+.tabla-costos th,
+.tabla-costos td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.tabla-costos th {
+  font-weight: bold;
+  background-color: #0a6b0a;
+  color: white;
+}
+
+.tabla-costos tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tabla-costos tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+.tabla-costos input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  text-align: center;
+  font-size: 14px;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.tabla-costos input:read-only {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.remove-btn {
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.remove-btn:hover {
+  background: darkred;
+}
+
+#resultado {
+  text-align: center;
+  font-size: 0.95em;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+}
+
+#costoTotal {
+  color: #0a6b0a;
+  font-weight: bold;
+  font-size: 0.95em;
+}
+}
+
 .login-modal-content h2 {
   font-size: 1.8em;
   text-align: center;

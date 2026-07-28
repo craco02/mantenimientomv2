@@ -60,7 +60,7 @@
                     <!-- Select con buscador (mÃ¡quina/equipo) -->
                     <div>
                         <label for="maquina">Solicitud/Maquina</label>
-                        <select id="maquina" name="componente" required></select>
+                        <select id="maquina" name="id" required></select>
                     </div>
                     <!-- Párrafo dinámico para mostrar la avería -->
                     <p id="info-averia" class="info-averia"></p>
@@ -69,18 +69,18 @@
                         <label for="apoyo">Apoyo</label>
                         <select id="apoyo" name="apoyo">
                         <option value="">Sin apoyo</option>   
-                        <option value="Santiago Rodriguez">Santiago Rodriguez</option>
+                        <option value="Santiago Rodríguez">Santiago Rodríguez</option>
                         <option value="Mauricio Patiño">Mauricio Patiño</option>
-                        <option value="Ismael Vazques">Ismael Vazques</option>
-                        <option value="Angel Lezcano">Angel Lezcano</option>
-                        <option value="Adriano Veron">Adriano Veron</option>
+                        <option value="Ismael Vásquez">Ismael Vásquez</option>
+                        <option value="Ángel Lezcano">Ángel Lezcano</option>
+                        <option value="Adriano Verón">Adriano Verón</option>
                         <option value="Alvaro Lovera">Alvaro Lovera</option>
-                        <option value="Blas Gimenez">Blas Gimenez</option>
+                        <option value="Blas Giménez">Blas Giménez</option>
                         <option value="Cristhian Redes">Cristhian Redes</option>
-                        <option value="Gustavo Gonzalez">Gustavo Gonzalez</option>
+                        <option value="Gustavo González">Gustavo González</option>
                         <option value="Edgar Ledezma">Edgar Ledezma</option>
                         <option value="Cristino Mora">Cristino Mora</option>
-                        <option value="Ronaldo Caceres">Ronaldo Caceres</option>
+                        <option value="Ronaldo Cáceres">Ronaldo Cáceres</option>
                         </select>
                     </div>
                     <!-- Area de texto (descripcion de la reparación) -->
@@ -88,6 +88,34 @@
                         <label for="reparación">Reparación Realizada</label>
                         <textarea id="reparación" name="reparacion" rows="5" placeholder="Describa la intervencion realizada o la reparación realizada" required></textarea>
                     </div>
+
+                    <!-- Tabla de Costeo de Repuestos -->
+                    <div class="campo-ancho">
+                        <label for="tablaCostos">Costeo de Repuestos</label>
+                        <table class="tabla-costos">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Costo Unitario</th>
+                                    <th>Total</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaBody">
+                                <!-- Primera fila vacía se genera desde JS -->
+                            </tbody>
+                        </table>
+                        <div id="resultado">
+                            <span id="costoTotal">0</span>
+                        </div>
+                        <input type="hidden" id="unidad_mo" name="unidad_mo" value="0">
+                        <input type="hidden" id="costo_repuestos" name="costo_repuestos" value="0">
+                    </div>
+
+                    <!-- datalist global -->
+                    <datalist id="listaProductos"></datalist>
+
                     <!--Entrada de horas empleadas-->
                     <div>
                         <label for="horas">Horas empleadas en la reparación</label>
@@ -113,7 +141,9 @@
                 </form>
 
                 <!-- Buscador propio para el select de máquina -->
-                <script src="../js/cierre_ordenes.js"></script><script src="../js/formularios.js"></script>
+                <script src="../js/cierre_ordenes.js"></script>
+                <script src="../js/cierre_costos.js"></script>
+                <script src="../js/formularios.js"></script>
 
             </main>
     </body>

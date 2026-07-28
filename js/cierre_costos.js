@@ -1,0 +1,255 @@
+let productos = [];
+const maxFilas = 15;
+
+// Función para formatear números como enteros con separadores de mil
+function formatearNumero(num) {
+  const entero = Math.floor(num);
+  return entero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+// Función para parsear número formateado
+function parseNumeroFormateado(texto) {
+  return parseFloat(texto.replace(/\./g, '').replace(/,/g, '.')) || 0;
+}
+
+async function cargarProductos() {
+  try {
+    const response = await API_FETCH('/api/productos');
+    const data = await response.json();
+    productos = data;
+
+    // Poblar datalist global con código + descripción
+    const lista = document.getElementById('listaProductos');
+    lista.innerHTML = '';
+    productos.forEach(p => {
+      const option = document.createElement('option');
+      option.value = `${p.codigo} - ${p.descripcion}`;
+      lista.appendChild(option);
+    });
+
+    agregarFila(); // primera fila vacía
+  } catch (err) {
+    console.error("Error cargando productos:", err);
+  }
+}
+
+function crearBuscador() {
+  const buscador = document.createElement('input');
+  buscador.type = 'text';
+  buscador.placeholder = 'Buscar producto...';
+  buscador.setAttribute('list', 'listaProductos');
+  return buscador;
+}
+
+function agregarFila() {
+  const tablaBody = document.getElementById('tablaBody');
+  const filasActuales = tablaBody.querySelectorAll('tr').length;
+  if (filasActuales >= maxFilas) return;
+
+  const fila = document.createElement('tr');
+
+  const buscador = crearBuscador();
+  const inputCantidad = document.createElement('input');
+  inputCantidad.type = 'number';
+  inputCantidad.min = '0';
+
+  const costoUnitario = document.createElement('input');
+  costoUnitario.type = 'text';
+  costoUnitario.readOnly = true;
+
+  const total = document.createElement('input');
+  total.type = 'text';
+  total.readOnly = true;
+
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.textContent = 'X';
+  removeBtn.classList.add('remove-btn');
+  removeBtn.addEventListener('click', () => {
+    fila.remove();
+    // Siempre debe quedar al menos una fila
+    const filasRestantes = document.getElementById('tablaBody').querySelectorAll('tr').length;
+    if (filasRestantes === 0) {
+      agregarFila();
+    }
+    recalcularTotal();
+  });
+
+  buscador.addEventListener('change', () => {
+    // Buscar por código o descripción
+    const valor = buscador.value.trim();
+    let prod = productos.find(p => `${p.codigo} - ${p.descripcion}` === valor);
+
+    // Si no coincide exactamente, intentar buscar por código o por descripción parcial
+    if (!prod) {
+      prod = productos.find(p => p.codigo.toString() === valor || p.descripcion === valor);
+    }
+
+    if (prod) {
+      const precio = prod.precio_compra || 0;
+      costoUnitario.value = formatearNumero(precio);
+      verificarFilaCompleta(fila);
+      agregarFilaSiNecesaria();
+    }
+  });
+
+  buscador.addEventListener('input', () => {
+    agregarFilaSiNecesaria();
+  });
+
+  inputCantidad.addEventListener('input', () => {
+    const cantidad = parseFloat(inputCantidad.value) || 0;
+    const precio = parseNumeroFormateado(costoUnitario.value);
+    const totalVal = cantidad * precio;
+    total.value = formatearNumero(totalVal);
+    verificarFilaCompleta(fila);
+    recalcularTotal();
+    agregarFilaSiNecesaria();
+  });
+
+  fila.appendChild(document.createElement('td')).appendChild(buscador);
+  fila.appendChild(document.createElement('td')).appendChild(inputCantidad);
+  fila.appendChild(document.createElement('td')).appendChild(costoUnitario);
+  fila.appendChild(document.createElement('td')).appendChild(total);
+  fila.appendChild(document.createElement('td')).appendChild(removeBtn);
+
+  tablaBody.appendChild(fila);
+}
+
+function verificarFilaCompleta(fila) {
+  const buscador = fila.querySelector('td:nth-child(1) input');
+  const cantidad = fila.querySelector('td:nth-child(2) input');
+  const costo = fila.querySelector('td:nth-child(3) input');
+
+  if (buscador.value && cantidad.value && costo.value) {
+    // Fila completa
+    return true;
+  }
+  return false;
+}
+
+function agregarFilaSiNecesaria() {
+  const tablaBody = document.getElementById('tablaBody');
+  const filasActuales = tablaBody.querySelectorAll('tr').length;
+  
+  if (filasActuales >= maxFilas) return;
+
+  // Verificar si la última fila tiene algún dato
+  if (filasActuales > 0) {
+    const ultimaFila = tablaBody.lastElementChild;
+    const buscador = ultimaFila.querySelector('td:nth-child(1) input').value;
+    const cantidad = ultimaFila.querySelector('td:nth-child(2) input').value;
+    
+    // Si la última fila tiene algo, agregar una nueva
+    if (buscador || cantidad) {
+      agregarFila();
+    }
+  }
+}
+
+function recalcularTotal() {
+  let costoTotal = 0;
+  document.querySelectorAll('#tablaBody tr').forEach(fila => {
+    const totalText = fila.querySelector('td:nth-child(4) input').value;
+    const total = parseNumeroFormateado(totalText);
+    costoTotal += total;
+  });
+  document.getElementById('costoTotal').textContent = formatearNumero(costoTotal);
+  document.getElementById('costo_repuestos').value = costoTotal.toFixed(2);
+}
+
+// Cuando se envía el formulario principal
+document.querySelector('form[action="/api/ordenes/cierre"]').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  recalcularTotal();
+
+  // Calcular costo_mo basado en salarios
+  try {
+    await calcularUnidadMO();
+  } catch (error) {
+    console.error('Error calculando unidad_mo:', error);
+    alert('Error al calcular unidad de MO');
+    return;
+  }
+
+  // Enviar formulario por AJAX
+  const formData = new FormData(e.target);
+  const payload = Object.fromEntries(formData);
+
+  try {
+    const response = await API_FETCH('/api/ordenes/cierre', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    // Leer el body una sola vez
+    const responseText = await response.text();
+    let data = {};
+    
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      console.error('Error al parsear JSON:', e);
+    }
+
+    if (!response.ok) {
+      const errorMsg = data.error || 'No se pudo cerrar la orden';
+      alert('Error: ' + errorMsg);
+      return;
+    }
+
+    alert('Orden cerrada exitosamente');
+    window.location.href = '../pages/lista_solicitudes.html';
+  } catch (error) {
+    console.error('Error al cerrar orden:', error);
+    alert('Error al cerrar la orden: ' + error.message);
+  }
+});
+
+// Obtener usuario logueado del localStorage
+function getUsernameFromLocalStorage() {
+  return localStorage.getItem('username');
+}
+
+// Obtener salario de un empleado por username o nombre
+async function obtenerSalarioEmpleado(identifier) {
+  if (!identifier) return 0;
+  try {
+    const response = await API_FETCH(`/api/auth/empleados/${encodeURIComponent(identifier)}/salario`);
+    const data = await response.json();
+    return data.salario || 0;
+  } catch (err) {
+    console.error(`Error obteniendo salario de ${identifier}:`, err);
+    return 0;
+  }
+}
+
+// Calcular unidad_mo
+async function calcularUnidadMO() {
+  // El responsable es el usuario logueado (desde token JWT, que es el username/user)
+  const responsable = getUsernameFromLocalStorage();
+  
+  // El apoyo es el nombre_apellido seleccionado en el select
+  const apoyo = document.getElementById('apoyo').value;
+
+  let salarioResponsable = 0;
+  let salarioApoyo = 0;
+
+  if (responsable) {
+    // Buscar salario del responsable por username
+    salarioResponsable = await obtenerSalarioEmpleado(responsable);
+  }
+
+  // Si apoyo dice "Sin apoyo", no buscar salario
+  if (apoyo && apoyo !== "Sin apoyo") {
+    // Buscar salario del apoyo por nombre_apellido
+    salarioApoyo = await obtenerSalarioEmpleado(apoyo);
+  }
+
+  const unidadMO = (salarioResponsable + salarioApoyo) / 240;
+  document.getElementById('unidad_mo').value = unidadMO.toFixed(2);
+}
+
+// Inicializar
+cargarProductos();
