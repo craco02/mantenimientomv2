@@ -1,7 +1,8 @@
 ﻿(function () {
   const form = document.querySelector('main form');
-  if (!form || !form.action.includes('/api/ordenes')) return;
-  if (form.action.endsWith('/cierre')) return;
+  const action = form?.getAttribute('action') || '';
+  if (!form || !action.startsWith('/api/ordenes')) return;
+  if (action.endsWith('/cierre')) return;
   const token = () => localStorage.getItem('token');
   const value = id => document.getElementById(id)?.value || '';
   const selectedText = element => element?.selectedOptions?.[0]?.text?.trim() || '';
@@ -10,20 +11,22 @@
 
   function requestPayload() {
     const machine = document.getElementById('maquinaEquipo') || document.getElementById('maquina');
+    const incluirDeclarado = document.getElementById('declarado-radio')?.checked;
     return {
       id: value('ordenId'),
       codigo: machine.dataset.codigo || machine.value,
       maquina_equipo: machine.dataset.descripcion || '',
-      nombre_declarado: value('declarado'),
+      nombre_declarado: incluirDeclarado ? value('declarado') : null,
       averia: value('averia'),
       solicitado: value('solicitante'),
       sector: sectorNames[Number(value('sector'))],
-      categoria: categoryNames[Number(value('categoria'))]
+      categoria: categoryNames[Number(value('categoria'))],
+      prioridad: value('prioridad') || null
     };
   }
 
   function payload() {
-    if (form.action.endsWith('/cierre')) {
+    if (action.endsWith('/cierre')) {
       const selects = form.querySelectorAll('select');
       return {
         id: selects[0].value,
@@ -34,7 +37,7 @@
         horas: value('horas')
       };
     }
-    if (form.action.endsWith('/asignacion')) {
+    if (action.endsWith('/asignacion')) {
       const selects = form.querySelectorAll('select');
       return { id: selects[0].value, responsable: selectedText(selects[1]), apoyo: selectedText(selects[2]) };
     }
@@ -45,19 +48,19 @@
     event.preventDefault();
     if (localStorage.getItem('role') !== 'editor' || !token()) return alert('Debe iniciar sesion como editor.');
     const data = payload();
-    if ((form.action.endsWith('/ordenes') && (!data.codigo || !data.maquina_equipo)) || (!form.action.endsWith('/ordenes') && !data.id)) return alert('Seleccione primero una opcion de la lista.');
+    if ((action.endsWith('/ordenes') && (!data.codigo || !data.maquina_equipo)) || (!action.endsWith('/ordenes') && !data.id)) return alert('Seleccione primero una opcion de la lista.');
     try {
-      const response = await API_FETCH(form.action, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token()}` }, body: JSON.stringify(data) });
-      let result;
+      const response = await API_FETCH(action, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token()}` }, body: JSON.stringify(data) });
+      const responseText = await response.text();
+      let result = {};
       try {
-        result = await response.json();
+        result = responseText ? JSON.parse(responseText) : {};
       } catch (parseError) {
-        const text = await response.text();
-        throw new Error(text || 'No se pudo interpretar la respuesta del servidor.');
+        throw new Error(responseText || 'No se pudo interpretar la respuesta del servidor.');
       }
       if (!response.ok) throw new Error(result.detalle || result.error || 'No se pudo guardar');
       alert(result.message || 'Operacion completada.');
-      if (form.action.endsWith('/ordenes') || form.action.endsWith('/cierre') || form.action.endsWith('/asignacion') || form.action.endsWith('/solicitud')) {
+      if (action.endsWith('/ordenes') || action.endsWith('/cierre') || action.endsWith('/asignacion') || action.endsWith('/solicitud')) {
         form.reset();
         window.location.href = 'lista_solicitudes.html';
       }

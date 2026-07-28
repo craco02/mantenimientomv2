@@ -67,10 +67,14 @@
     }
 
     try {
-      const res = await API_FETCH(`/api/productos?search=${encodeURIComponent(busqueda)}`);
+      const res = await API_FETCH(`/api/productos/search?search=${encodeURIComponent(busqueda)}`);
       const datos = await res.json();
 
-      resultadosActuales = datos.slice(0, 60);
+      if (!res.ok) {
+        throw new Error(datos.error || 'No se pudieron buscar las máquinas/equipos.');
+      }
+
+      resultadosActuales = Array.isArray(datos) ? datos.slice(0, 60) : [];
       lista.innerHTML = '';
 
       if (resultadosActuales.length === 0) {
@@ -186,6 +190,5 @@ crearSelectConBusqueda(selectMaquina);
     } catch (error) { alert(error.message || 'No se pudo guardar la solicitud.'); }
   });
 })();
-
 
 
