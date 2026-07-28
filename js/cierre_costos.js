@@ -175,6 +175,12 @@ document.querySelector('form[action="/api/ordenes/cierre"]').addEventListener('s
   // Enviar formulario por AJAX
   const formData = new FormData(e.target);
   const payload = Object.fromEntries(formData);
+  const selectApoyo = document.getElementById('apoyo');
+
+  // El item se usa para calcular el salario; en la orden se guarda el nombre visible.
+  payload.apoyo = selectApoyo.value
+    ? selectApoyo.selectedOptions[0].text.trim()
+    : '';
 
   try {
     const response = await API_FETCH('/api/ordenes/cierre', {
@@ -213,14 +219,15 @@ function getUsernameFromLocalStorage() {
 }
 
 // Obtener salario de un empleado por username o nombre
-async function obtenerSalarioEmpleado(identifier) {
-  if (!identifier) return 0;
+async function obtenerSalarioEmpleado(identificador) {
+  if (!identificador) return 0;
   try {
-    const response = await API_FETCH(`/api/auth/empleados/${encodeURIComponent(identifier)}/salario`);
+    const response = await API_FETCH(`/api/auth/empleados/${encodeURIComponent(identificador)}/salario`);
+    if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
     const data = await response.json();
     return data.salario || 0;
   } catch (err) {
-    console.error(`Error obteniendo salario de ${identifier}:`, err);
+    console.error(`Error obteniendo salario de ${identificador}:`, err);
     return 0;
   }
 }
@@ -231,7 +238,7 @@ async function calcularUnidadMO() {
   const responsable = getUsernameFromLocalStorage();
   
   // El apoyo es el nombre_apellido seleccionado en el select
-  const apoyo = document.getElementById('apoyo').value;
+  const itemApoyo = document.getElementById('apoyo').value;
 
   let salarioResponsable = 0;
   let salarioApoyo = 0;
@@ -242,9 +249,9 @@ async function calcularUnidadMO() {
   }
 
   // Si apoyo dice "Sin apoyo", no buscar salario
-  if (apoyo && apoyo !== "Sin apoyo") {
+  if (itemApoyo) {
     // Buscar salario del apoyo por nombre_apellido
-    salarioApoyo = await obtenerSalarioEmpleado(apoyo);
+    salarioApoyo = await obtenerSalarioEmpleado(itemApoyo);
   }
 
   const unidadMO = (salarioResponsable + salarioApoyo) / 240;

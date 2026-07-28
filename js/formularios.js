@@ -1,6 +1,7 @@
 ﻿(function () {
   const form = document.querySelector('main form');
   if (!form || !form.action.includes('/api/ordenes')) return;
+  if (form.action.endsWith('/cierre')) return;
   const token = () => localStorage.getItem('token');
   const value = id => document.getElementById(id)?.value || '';
   const selectedText = element => element?.selectedOptions?.[0]?.text?.trim() || '';
