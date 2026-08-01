@@ -1,7 +1,7 @@
 /* Configuración centralizada de la API para el frontend */
 const API_BASE_URL = window.location.port === '3000' && /^https?:$/i.test(window.location.protocol)
   ? window.location.origin
-  : 'https://192.168.23.210:3000';
+  : 'https://192.168.23.164:3000';
 
 const API_URL = (path) => {
   if (!path) return API_BASE_URL;
