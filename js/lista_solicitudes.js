@@ -2,6 +2,7 @@ let datos = [];
 let ordenAsc = true;
 let columnaOrden = "id"; // columna inicial
 let ordenInicialDesc = true;
+let filaSeleccionadaId = null;
 
 // Cargar datos desde backend (solo ordenes)
 async function cargarOrdenes() {
@@ -37,12 +38,48 @@ function formatFecha(value) {
   return `${dia}/${mes}/${año} ${hora}:${minutos}`;
 }
 
+function normalizarTexto(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function claseEstadoFila(row) {
+  const progreso = normalizarTexto(row.progreso);
+  const estadoEjecucion = normalizarTexto(row.estado_ejecucion);
+
+  if (progreso === "baja" || progreso === "de baja") return "estado-baja";
+  if (progreso === "reprogramado") return "estado-reprogramado";
+
+  if (progreso === "completado") {
+    if (estadoEjecucion === "en plazo") return "estado-completado-plazo";
+    if (estadoEjecucion === "con retraso") return "estado-completado-retraso";
+  }
+
+  if (progreso === "no iniciado") {
+    const vencimiento = new Date(row.fecha_vencimiento);
+    const ahora = new Date();
+    return !Number.isNaN(vencimiento.getTime()) && vencimiento < ahora
+      ? "estado-vencido"
+      : "estado-pendiente";
+  }
+
+  return "";
+}
+
 // Renderizar tabla
 function renderTabla(data) {
   const tbody = document.querySelector("#tablaOrdenes tbody");
   tbody.innerHTML = "";
   data.forEach(row => {
     const tr = document.createElement("tr");
+    const claseEstado = claseEstadoFila(row);
+    if (claseEstado) tr.classList.add(claseEstado);
+    if (String(row.id) === String(filaSeleccionadaId)) tr.classList.add("fila-seleccionada");
+    tr.addEventListener("click", () => {
+      filaSeleccionadaId = row.id;
+      document.querySelectorAll("#tablaOrdenes tbody tr").forEach(fila => {
+        fila.classList.toggle("fila-seleccionada", fila === tr);
+      });
+    });
     tr.innerHTML = `
       <td>${row.id}</td>
       <td>${row.NE || ""}</td>
@@ -69,6 +106,7 @@ function renderTabla(data) {
       <td>${row.total_costo || ""}</td>
       <td>${row.notas || ""}</td>
       <td>${row.progreso || ""}</td>
+      <td>${row.estado_ejecucion || ""}</td>
       <td>${row.carga || ""}</td>
       <td>${row.horas_paro || ""}</td>
       <td>${row.horas_mes || ""}</td>
@@ -122,4 +160,3 @@ document.getElementById("buscador").addEventListener("input", e => {
 
 // Ejecutar carga inicial
 cargarOrdenes();
-

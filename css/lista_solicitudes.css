@@ -73,12 +73,43 @@ th, td {
   white-space: nowrap;      /* obliga al scroll horizontal */
 }
 
-tr:nth-child(even) {
+#tablaOrdenes tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-tr:hover {
+#tablaOrdenes tbody tr:hover {
   background-color: #eef;
+}
+
+/* Colores operativos: se aplican a toda la fila. */
+#tablaOrdenes tbody tr.estado-pendiente {
+  background-color: #8fd3ff;
+}
+
+#tablaOrdenes tbody tr.estado-vencido {
+  background-color: #ff8b96;
+}
+
+#tablaOrdenes tbody tr.estado-completado-plazo {
+  background-color: #8eea9b;
+}
+
+#tablaOrdenes tbody tr.estado-completado-retraso {
+  background-color: #ffb366;
+}
+
+#tablaOrdenes tbody tr.estado-baja {
+  background-color: #e6e6e6;
+}
+
+#tablaOrdenes tbody tr.estado-reprogramado {
+  background-color: #c7a6ff;
+}
+
+#tablaOrdenes tbody tr.fila-seleccionada {
+  outline: 3px solid #1f2937;
+  outline-offset: -3px;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.8);
 }
 #tablaOrdenes th, 
 #tablaOrdenes td {
