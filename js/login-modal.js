@@ -3,6 +3,11 @@ const loginModal = document.getElementById('loginModal');
 const closeModal = document.getElementById('closeLoginModal');
 const form = document.getElementById('loginForm');
 const mensaje = document.getElementById('loginMensaje');
+
+function closeLoginModal() {
+  loginModal.classList.remove('is-visible');
+  form.reset();
+}
 const fetchOriginal = window.fetch.bind(window);
 window.fetch = (url, options = {}) => {
   const normalizedUrl = typeof url === 'string' ? API_URL(url) : url;
@@ -24,10 +29,19 @@ function renderNav() {
     });
   } else {
     navLogin.innerHTML = '<div id="loginDiv" class="nav-btn">Login</div>';
-    document.getElementById('loginDiv').addEventListener('click', () => { loginModal.style.display = 'block'; });
+    document.getElementById('loginDiv').addEventListener('click', () => {
+      loginModal.classList.add('is-visible');
+      document.getElementById('user').focus();
+    });
   }
 }
-closeModal.addEventListener('click', () => { loginModal.style.display = 'none'; form.reset(); });
+closeModal.addEventListener('click', closeLoginModal);
+loginModal.addEventListener('click', event => {
+  if (event.target === loginModal) closeLoginModal();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && loginModal.classList.contains('is-visible')) closeLoginModal();
+});
 form.addEventListener('submit', async event => {
   event.preventDefault();
   try {
