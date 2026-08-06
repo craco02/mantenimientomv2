@@ -922,10 +922,19 @@ padding: 0 0 20px 0;
     line-height: 1.25;
 }
 
+.solicitud .field-description {
+    display: block;
+    margin: 4px 0 6px;
+    color: #475569;
+    font-size: clamp(12px, 1.3vw, 14px);
+    line-height: 1.35;
+}
+
 /* Observacion: los campos comparten altura y ancho para evitar saltos visuales entre
    el buscador personalizado y los select normales. */
 .solicitud select,
 .solicitud input[type="text"],
+.solicitud input[type="tel"],
 .solicitud input[type="number"],
 .solicitud textarea,
 .select-buscador-input {
@@ -946,6 +955,7 @@ padding: 0 0 20px 0;
 
 .solicitud select:focus,
 .solicitud input[type="text"]:focus,
+.solicitud input[type="tel"]:focus,
 .solicitud input[type="number"]:focus,
 .solicitud textarea:focus,
 .select-buscador-input:focus {

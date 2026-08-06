@@ -79,6 +79,11 @@
                         <label for="solicitante">Solicitante</label>
                         <input type="text" id="solicitante" name="solicitante" placeholder="Nombre del solicitante" required>
                     </div>
+                    <div>
+                        <label for="contacto">Contacto de operador</label>
+                        <small id="contacto-ayuda" class="field-description">Número de teléfono para reporte de reparación, no obligatorio.</small>
+                        <input type="tel" id="contacto" name="contacto" inputmode="numeric" maxlength="10" pattern="09[6789][0-9]{7}" placeholder="Ejemplo: 0981456789" aria-describedby="contacto-ayuda">
+                    </div>
                       <!-- Select normal (Sector) -->
                     <div>
                         <label for="sector">Sector</label>
@@ -123,5 +128,3 @@
             </main>
     </body>
 </html>
-
-
